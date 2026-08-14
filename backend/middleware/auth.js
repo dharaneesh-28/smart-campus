@@ -21,13 +21,14 @@ const protect = async (req, res, next) => {
     
     const mongoose = require('mongoose');
     if (mongoose.connection.readyState === 0) {
-      const mockUsers = {
-        'admin_mock_id': { id: 'admin_mock_id', name: 'Dharaneesh Admin', email: 'admin@gmail.com', role: 'admin', department: 'CSE' },
-        'faculty_mock_id': { id: 'faculty_mock_id', name: 'Dr. Sarah Connor', email: 'faculty@gmail.com', role: 'faculty', department: 'CSE' },
-        'coordinator_mock_id': { id: 'coordinator_mock_id', name: 'Alex Coordinator', email: 'coordinator@gmail.com', role: 'coordinator', department: 'IT' },
-        'student_mock_id': { id: 'student_mock_id', name: 'John Student Doe', email: 'student@gmail.com', role: 'student', department: 'CSE', semester: 5, rollNumber: 'CSE-2024-042' }
-      };
-      req.user = mockUsers[decoded.id] || mockUsers['student_mock_id'];
+      global.mockUsersList = global.mockUsersList || [
+        { id: 'admin_mock_id', name: 'Dharaneesh Admin', email: 'admin@gmail.com', password: 'admin123', role: 'admin', department: 'CSE' },
+        { id: 'faculty_mock_id', name: 'Dr. Sarah Connor', email: 'faculty@gmail.com', password: 'faculty123', role: 'faculty', department: 'CSE' },
+        { id: 'coordinator_mock_id', name: 'Alex Coordinator', email: 'coordinator@gmail.com', password: 'coordinator123', role: 'coordinator', department: 'IT' },
+        { id: 'student_mock_id', name: 'John Student Doe', email: 'student@gmail.com', password: 'student123', role: 'student', department: 'CSE', semester: 5, rollNumber: 'CSE-2024-042' }
+      ];
+      const matched = global.mockUsersList.find(u => u.id === decoded.id);
+      req.user = matched || { id: decoded.id, name: 'Guest User', email: 'guest@college.edu', role: 'student' };
       return next();
     }
 
