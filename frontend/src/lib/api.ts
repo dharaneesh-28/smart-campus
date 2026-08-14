@@ -1,4 +1,4 @@
-export const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://smart-campus-kavz.onrender.com';
+export const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
 export async function apiFetch(endpoint: string, options: RequestInit = {}) {
   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;

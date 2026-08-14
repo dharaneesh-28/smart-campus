@@ -18,6 +18,16 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
+// Web trigger to run seeder (Bypasses Render's paid shell requirement)
+app.get('/api/seed', (req, res) => {
+  const { exec } = require('child_process');
+  exec('node utils/seed.js', (err, stdout, stderr) => {
+    if (err) {
+      return res.status(500).json({ success: false, error: stderr || err.message });
+    }
+    res.status(200).send(`<h1>Seeding Complete! 🎉</h1><pre>${stdout}</pre><a href="/">Go back</a>`);
+  });
+});
 // Mount actual API routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/assignments', require('./routes/assignmentRoutes'));
