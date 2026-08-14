@@ -14,6 +14,51 @@ exports.createAssignment = async (req, res) => {
 
 exports.getAllAssignments = async (req, res) => {
   try {
+    const mongoose = require('mongoose');
+    if (mongoose.connection.readyState === 0) {
+      const mockAssignments = [
+        {
+          _id: 'assign1',
+          title: 'Linked List Implementation',
+          description: 'Implement a doubly linked list in C++ and analyze its space/time complexity.',
+          course: 'Data Structures & Algorithms',
+          faculty: { name: 'Dr. Sarah Connor' },
+          deadline: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
+          maxMarks: 100,
+          submissions: []
+        },
+        {
+          _id: 'assign2',
+          title: 'React Portfolio Website',
+          description: 'Build a fully responsive portfolio website using Tailwind CSS and React.',
+          course: 'Web Development',
+          faculty: { name: 'Dr. Sarah Connor' },
+          deadline: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+          maxMarks: 50,
+          submissions: []
+        },
+        {
+          _id: 'assign3',
+          title: 'SQL Query Optimization',
+          description: 'Optimize the given query schema and generate index configurations.',
+          course: 'Database Management Systems',
+          faculty: { name: 'Dr. Sarah Connor' },
+          deadline: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+          maxMarks: 75,
+          submissions: [
+            {
+              student: 'student_mock_id',
+              githubLink: 'https://github.com/student/dbms-opt',
+              marks: 68,
+              feedback: 'Excellent work on query indexing and plan explanations!',
+              status: 'graded'
+            }
+          ]
+        }
+      ];
+      return res.status(200).json({ success: true, assignments: mockAssignments });
+    }
+
     const assignments = await Assignment.find().populate('faculty', 'name').sort({ deadline: -1 });
     res.status(200).json({ success: true, assignments });
   } catch (error) {
